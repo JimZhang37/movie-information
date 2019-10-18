@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DetailActivity">
+    <!--TODO(A)  line2 Your ScrollView is implemented very well and your app has a really nice appearance. Good job! Also, to learn more, you might be wondering why there is such a line: xmlns:android="http://schemas.android.com/apk/res/android". It is mainly for declaring a namespace: "android" (xmlns is used in XML for declaring namespaces: XML Namespace). You could learn it in detail here: StackOverflow-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextView2"
+            android:text="@string/text_view_title" />
+
+        <ToggleButton
+            android:id="@+id/tb_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickFavoriteMovieToggleButton"
+            android:textOff="@string/toggle_button_off"
+            android:textOn="@string/toggle_button_on" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/TextView1" />
+
+
+        <TextView
+            style="@style/TextView2"
+            android:text="@string/text_view_image" />
+
+        <ImageView
+            android:id="@+id/iv_movie_poster_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/TextView2"
+            android:text="@string/text_view_synopsis" />
+        <!--Completed (B) What you have implemented here is really good. But I still have a little advice here: To avoid repeating those XML TextView codes, you can consider to define a general TextView style and put this general definition into the res/values/styles.xml resource file (just like the res/values/strings.xml file I have described). When you want to create a similar TextView, you can reuse the style using that resource file and only write some specific values (for example, android:id, or android:text). By doing so, you can make your code cleaner. Try it! :smiley:-->
+        <TextView
+            android:id="@+id/tv_synopsis"
+            style="@style/TextView1" />
+
+        <TextView
+            style="@style/TextView2"
+            android:text="@string/text_view_user_rating" />
+        <!--Completed (C) Like your string values, you should also consider to save this string value to somewhere like res/values/strings.xml-->
+        <TextView
+            android:id="@+id/tv_user_rating"
+            style="@style/TextView1" />
+
+        <TextView
+            style="@style/TextView2"
+            android:text="@string/text_view_release_date" />
+
+        <TextView
+            android:id="@+id/tv_release_data"
+            style="@style/TextView1" />
+
+        <TextView
+            style="@style/TextView2"
+            android:text="@string/text_view_trailers" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_trailers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            style="@style/TextView2"
+            android:text="@string/text_view_reviews" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+
+</ScrollView>
