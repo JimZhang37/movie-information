@@ -38,8 +38,6 @@ public class TestActivity extends AppCompatActivity implements ImageAdapter.List
             mAdapter = new ImageAdapter(getApplicationContext(), data.size(), data, TestActivity.this);
             mRV.setAdapter(mAdapter);
         });
-
-
     }
 
 
@@ -53,7 +51,6 @@ public class TestActivity extends AppCompatActivity implements ImageAdapter.List
         Intent intent = new Intent(TestActivity.this, destinationActivity);
         intent.putExtra("Movie", model.getData().getValue().get(clickedItemIndex));
         startActivity(intent);
-
     }
 
     /**
@@ -75,26 +72,17 @@ public class TestActivity extends AppCompatActivity implements ImageAdapter.List
         int itemId = item.getItemId();
 
         switch (itemId) {
-
             /*         * When you click the reset menu item, we want to start all over
              * and display the pretty gradient again. There are a few similar
              * ways of doing this, with this one being the simplest of those
              * ways. (in our humble opinion)*/
-
             case R.id.popular_test:
                 model.setData(1);
-                mAdapter = new ImageAdapter(getApplicationContext(), model.getData().getValue().size(), model.getData().getValue(), TestActivity.this);
-                mRV.setAdapter(mAdapter);
                 return true;
             case R.id.top_rated_test:
                 model.setData(2);
-                mAdapter = new ImageAdapter(getApplicationContext(), model.getData().getValue().size(), model.getData().getValue(), TestActivity.this);
-                mRV.setAdapter(mAdapter);
                 return true;
-
-
         }
-
         return super.onOptionsItemSelected(item);//TODO why return?
     }
 

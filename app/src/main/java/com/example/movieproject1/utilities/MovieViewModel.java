@@ -31,13 +31,13 @@ public class MovieViewModel extends AndroidViewModel {
     public void setData(int type) {
         switch (type) {
             case 1:
-                movieLiveData.loadPopular();
+                movieLiveData.loadData(1);
                 return;
             case 2:
-                movieLiveData.loadTopRated();
+                movieLiveData.loadData(2);
                 return;
             default:
-                movieLiveData.loadPopular();
+                movieLiveData.loadData(1);
                 return;
 
         }
