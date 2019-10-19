@@ -16,6 +16,7 @@
 package com.example.movieproject1.utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,8 @@ import java.util.Scanner;
  * These utilities will be used to communicate with the network.
  */
 public class NetworkUtils {
+
+    final String TAG = this.getClass().getSimpleName();
 
     final static String MOVIE_BASE_URL =
             "https://api.themoviedb.org/3/movie/";
@@ -82,6 +85,7 @@ public class NetworkUtils {
      * @throws IOException Related to network and stream reading
      */
     public static String getResponseFromHttpUrl(URL url) throws IOException {
+        Log.d("getResponseFromHttpUrl", "A new effort to fetch data from network");//I want to know if app make network request everytime configuratioin changes
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();

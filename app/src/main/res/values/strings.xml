@@ -4,6 +4,7 @@
     <string name="menu_popular">Popular</string>
     <string name="menu_top_rated">Top Rated</string>
     <string name="menu_my_favorites">My Favorites</string>
+    <string name="menu_test">Test</string>
     <string name="text_view_title">Title: </string>
     <string name="text_view_image">Image: </string>
     <string name="text_view_synopsis">Synopsis: </string>
@@ -14,4 +15,5 @@
     <string name="button_add">Add</string>
     <string name="toggle_button_off">Add me to Favorite!</string>
     <string name="toggle_button_on">Remove me from Favorite!</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

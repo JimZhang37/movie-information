@@ -3,6 +3,7 @@ package com.example.movieproject1;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import com.example.movieproject1.model.Movie;
 import com.example.movieproject1.utilities.ImageAdapter;
 import com.example.movieproject1.utilities.JSONTool;
 //import com.example.movieproject1.utilities.MovieQueryTask;
+import com.example.movieproject1.utilities.MovieViewModel;
 import com.example.movieproject1.utilities.NetworkUtils;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -42,6 +45,9 @@ public class MainActivity extends AppCompatActivity
     private String TAG = this.getClass().getSimpleName();
     private final String SEARCH_QUERY_URL_EXTRA = "search_queary_url_extra";
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +70,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
+    /**
+     * @param outState
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -73,17 +81,24 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
-
         return true;
     }
 
+    /**
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        URL movieSearchUrl;
+
         switch (itemId) {
 
             /*         * When you click the reset menu item, we want to start all over
@@ -92,17 +107,11 @@ public class MainActivity extends AppCompatActivity
              * ways. (in our humble opinion)*/
 
             case R.id.popular:
-
-//                makeMovieSearchQuery(1);
-//                new MovieQueryTask(this).execute(1);
                 Bundle arg1 = new Bundle();
                 arg1.putInt(SEARCH_QUERY_URL_EXTRA, 1);
                 getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, arg1, this);
                 return true;
             case R.id.top_rated:
-                //menu item 2
-//                makeMovieSearchQuery(2);
-//                new MovieQueryTask(this).execute(2);
                 Bundle arg2 = new Bundle();
                 arg2.putInt(SEARCH_QUERY_URL_EXTRA, 2);
                 getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, arg2, this);
@@ -114,36 +123,35 @@ public class MainActivity extends AppCompatActivity
                 getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, arg3, this);
                 return true;
 
+            case R.id.test_movies:
+                menu4();
+                return true;
 
         }
-
-//        return super.onOptionsItemSelected(item);
-
 
         getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
         return super.onOptionsItemSelected(item);//TODO why return?
     }
-/*
-    private void makeMovieSearchQuery(int menuItem) {
-        Log.d(TAG, "To begin execute a async task.");
 
-        new MovieQueryTask(this).execute(menuItem);
-
-    }*/
-
-
+    /**
+     * When a movie's picture is clicked, this movie's detailed information will be displaced in detailed activity
+     *
+     * @param clickedItemIndex
+     */
     @Override
     public void onListItemClick(int clickedItemIndex) {
-
-//        Log.d(TAG, "onListItemClick is called");
         Class destinationActivity = DetailActivity.class;
         Intent intent = new Intent(MainActivity.this, destinationActivity);
         intent.putExtra("Movie", mMovieList2.get(clickedItemIndex));
-
         startActivity(intent);
     }
 
-
+    /**
+     * A function from interface LoaderManager.LoaderCallbacks
+     * @param id
+     * @param args
+     * @return AsyncTaskLoader<ArrayList<Movie>>
+     */
     @NonNull
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, @Nullable final Bundle args) {
@@ -151,9 +159,13 @@ public class MainActivity extends AppCompatActivity
 
             ArrayList<Movie> mMovieList;
 
+            /**
+             * if mMovieList is loaded, skip the effort of downloading
+             * if mMovieList is empty, start the download task
+             */
             @Override
             protected void onStartLoading() {
-
+                Log.d("LoaderCallbacks", "onCreateLoader, onStartLoading+mMovieList");
                 if (mMovieList != null) {
                     deliverResult(mMovieList);
                 } else {
@@ -166,16 +178,15 @@ public class MainActivity extends AppCompatActivity
             @Nullable
             @Override
             public ArrayList<Movie> loadInBackground() {
+                Log.d("LoaderCallbacks", "onCreateLoader, loadInBackground");
 
-
-                Log.d(TAG, "Background Downloading!");
                 int menuItem;
                 if (args != null) {
                     menuItem = args.getInt(SEARCH_QUERY_URL_EXTRA);
                 } else {
                     menuItem = 1;
                 }
-//                int menuItem = 1;//TODO WE NEED A PREFERENCE
+                //TODO WE NEED A PREFERENCE
                 switch (menuItem) {
 
                     case 3:
@@ -190,17 +201,17 @@ public class MainActivity extends AppCompatActivity
                             return null;
                         }
                         ArrayList<Movie> movieFromDatabase = new ArrayList<Movie>();
-                        Log.d(TAG,"the number of favorite movies in a cursor is: " +String.valueOf(cursor.getCount()));
+                        Log.d(TAG, "the number of favorite movies in a cursor is: " + String.valueOf(cursor.getCount()));
                         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                             Log.d(TAG, "it's the nth time in a loop: " + String.valueOf(cursor.getPosition()));
-                            Movie m = new Movie(cursor.getString(1), cursor.getString(2),cursor.getString(3));//TODO change into to constant
+                            Movie m = new Movie(cursor.getString(1), cursor.getString(2), cursor.getString(3));//TODO change into to constant
                             movieFromDatabase.add(m);
                         }
-                        Log.d(TAG,"the number of favorite movies in a Array List is: " +String.valueOf(movieFromDatabase.size()));
+                        Log.d(TAG, "the number of favorite movies in a Array List is: " + String.valueOf(movieFromDatabase.size()));
 
                         return movieFromDatabase;
                     default:
-                        Log.d(TAG,"menuitem is not 3");
+                        Log.d(TAG, "menuitem is not 3");
                         URL movieSearchUrl = NetworkUtils.buildMovieListUrl(menuItem);
                         String movieSearchResults = null;
                         try {
@@ -221,8 +232,14 @@ public class MainActivity extends AppCompatActivity
         };
     }
 
+    /**
+     * A function of interface LoaderManager.LoaderCallbacks
+     * @param loader
+     * @param data
+     */
     @Override
     public void onLoadFinished(@NonNull Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
+        Log.d("LoaderCallbacks", "onLoadFinished");
         mMovieList2 = data;
         mShowSomething.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
@@ -231,18 +248,14 @@ public class MainActivity extends AppCompatActivity
         mShowSomething.setAdapter(mAdapter);
     }
 
+    /**
+     * A function of interface LoaderManager.LoaderCallbacks
+     * @param loader
+     */
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<Movie>> loader) {
 
     }
-
-   /* public ArrayList<Movie> getMovieList() {
-        return mMovieList;
-    }
-
-    public void setMovieList(ArrayList<Movie> mMovieList) {
-        this.mMovieList = mMovieList;
-    }*/
 
     public RecyclerView getShowSomething() {
         return mShowSomething;
@@ -256,4 +269,10 @@ public class MainActivity extends AppCompatActivity
         return mAdapter;
     }
 
+    public void menu4() {
+        Class destinationActivity = TestActivity.class;
+        Intent intent = new Intent(MainActivity.this, destinationActivity);
+//        intent.putExtra("Movie", mMovieList2.get(clickedItemIndex));
+        startActivity(intent);
+    }
 }

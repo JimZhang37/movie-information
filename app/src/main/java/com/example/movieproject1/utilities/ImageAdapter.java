@@ -53,6 +53,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         mNumberOfViewHolder = 0;
     }
 
+    public ArrayList<Movie> getMovieList() {
+        return mMovieList;
+    }
+
     @NonNull
     @Override
     public ImageAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

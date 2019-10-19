@@ -48,7 +48,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
         TrailerViewHolder viewHolder = new TrailerViewHolder(view);
         mNumberOfViewHolder++;
-        Log.d(TAG, "a New Trailer ViewHolder is created. Current number is: " + String.valueOf(mNumberOfViewHolder));
         return viewHolder;
     }
 
@@ -62,8 +61,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         return mSize;
     }
 
+    /**
+     * ViewHolder for Trailer has only one textview for trailer information
+     */
     class TrailerViewHolder extends RecyclerView.ViewHolder
             implements android.view.View.OnClickListener {
+
         private TextView mTrailer;
 
         public TrailerViewHolder(@NonNull View itemView) {

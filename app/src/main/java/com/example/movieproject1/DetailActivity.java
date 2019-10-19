@@ -88,7 +88,6 @@ public class DetailActivity extends AppCompatActivity
         http://jakewharton.github.io/butterknife/
         https://code.tutsplus.com/tutorials/quick-tip-using-butter-knife-to-inject-views-on-android--cms-23542*/
 
-        Log.d(TAG, "A new detail activity is created. onCreate");
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null && intentThatStartedThisActivity.hasExtra("Movie")) {
@@ -99,18 +98,13 @@ public class DetailActivity extends AppCompatActivity
             mSynopsisTextView.setText(mMovie.getSynopsis());
             mUserRatingTextView.setText(mMovie.getUserRating());
             mReleaseDateTextView.setText(mMovie.getReleaseDate());
-
         }
 
         if (savedInstanceState != null) {
-            Log.d(TAG, "get saved instance state from parcelable! Don't run async task that get movie trailer and review content.");
             mMovie = savedInstanceState.getParcelable(BUNDLE_MOVIE);
             mTrailerList = savedInstanceState.getParcelableArrayList(BUNDLE_TRAILER_LIST);
             mReviewList = savedInstanceState.getParcelableArrayList(BUNDLE_REVIEW_LIST);
             try {
-                Log.d(TAG, "the first trailer's name is " + mTrailerList.get(0).getName());
-                Log.d(TAG, "the first review's author is " + mReviewList.get(0).getAuthor());
-
 
                 mTrailerRecyclerView.setHasFixedSize(true);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -127,13 +121,6 @@ public class DetailActivity extends AppCompatActivity
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//
-//            mTrailerRecyclerView.setHasFixedSize(true);
-//            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-//            mTrailerRecyclerView.setLayoutManager(layoutManager);
-//            mReviewRecyclerView.setHasFixedSize(true);
-//            LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(getApplicationContext());
-//            mReviewRecyclerView.setLayoutManager(reviewLayoutManager);
 
             return;
         }
@@ -162,6 +149,10 @@ public class DetailActivity extends AppCompatActivity
         outState.putParcelableArrayList(BUNDLE_REVIEW_LIST, mReviewList);
     }
 
+    /**
+     * An Async Task to download trailer and review information from URL given
+     * and display them in recycler view.
+     */
     class TrailerQueryTask extends AsyncTask<String, Void, Void> {
 
 
@@ -187,13 +178,19 @@ public class DetailActivity extends AppCompatActivity
             return null;
         }
 
+        /**
+         * After the async downloading, this function displays trailers and reviews in
+         * two recycler views.
+         *
+         * @param aVoid
+         */
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
             try {
-                Log.d(TAG, "the first trailer's name is " + mTrailerList.get(0).getName());
-                Log.d(TAG, "the first review's author is " + mReviewList.get(0).getAuthor());
+//                Log.d(TAG, "the first trailer's name is " + mTrailerList.get(0).getName());
+//                Log.d(TAG, "the first review's author is " + mReviewList.get(0).getAuthor());
 
                 mTrailerRecyclerView.setHasFixedSize(true);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -216,6 +213,13 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * A function from interface: TrailerAdapter.ListItemClickListener
+     * When the trailer link is clicked, the app chooses to display the trailer in
+     * youtube app or in a web.
+     *
+     * @param index the id of trailer
+     */
     @Override
     public void onListItemClick(int index) {
         String key = mTrailerList.get(index).getKey();
@@ -228,42 +232,46 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * change the status of favorite movie when the toggle button is clicked
+     *
+     * @param view
+     */
     public void onClickFavoriteMovieToggleButton(View view) {
-        Log.d(TAG, "toggle button is checked? " + String.valueOf(mFavoriteMovieTB.isChecked()));
 
         if (mFavoriteMovieTB.isChecked()) {
-            Log.d(TAG, "add to Favorite");
             Uri uri = addFavorite();
             if (uri != null) {
                 Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
             }
         } else {
-            Log.d(TAG, "remove from favorite");
             removeFavorite();
         }
     }
 
+    /**
+     * Check if a movie is a favorite movie and change isFavorite accordingly
+     */
     public void isFavoriteMovie() {
         String selection = FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID + "=" + mMovie.getMovieID();
-//        String selectionArgs = "";
         Cursor cursor = getContentResolver().query(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,
                 null,
                 selection,
                 null,
                 null);
         int count = cursor.getCount();
-        Log.d(TAG, "the count of the cursor is: " + count);
         if (count > 0) {
-            Log.d(TAG, "The cursor is not null. /n" + cursor.toString());
             isFavorite = true;
-//            return true;
         } else if (count == 0) {
-            Log.d(TAG, "the cursor is null.");
             isFavorite = false;
         }
 
     }
 
+    /**
+     * Add movie to favorite table in local database
+     * @return Uri of insert operation
+     */
     public Uri addFavorite() {
         ContentValues contentValues = new ContentValues();
         // Put the task description and selected mPriority into the ContentValues
@@ -272,22 +280,18 @@ public class DetailActivity extends AppCompatActivity
         contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_IMAGE, mMovie.getImage());
         // Insert the content values via a ContentResolver
         Uri uri = getContentResolver().insert(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI, contentValues);
-        if (uri != null) {
-            return uri;
-        } else {
-            return null;
-        }
+        return uri;
     }
 
+    /**
+     * Revove movie from favorite table in local database
+     * @return true: removed from database, false: failed to remove
+     */
     public boolean removeFavorite() {
 
-
-        // Build appropriate uri with String row id appended
         String stringId = mMovie.getMovieID();
         Uri uri = FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(stringId).build();
-
-        // COMPLETED (2) Delete a single row of data using a ContentResolver
         int numRemoved = getContentResolver().delete(uri, null, null);
 
         if (numRemoved > 0) {
