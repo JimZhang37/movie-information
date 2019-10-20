@@ -3,7 +3,6 @@ package com.example.movieproject1;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +20,7 @@ import com.example.movieproject1.model.FavoriteMovieContract;
 import com.example.movieproject1.model.Movie;
 import com.example.movieproject1.utilities.ImageAdapter;
 import com.example.movieproject1.utilities.JSONTool;
-//import com.example.movieproject1.utilities.MovieQueryTask;
-import com.example.movieproject1.utilities.MovieViewModel;
+
 import com.example.movieproject1.utilities.NetworkUtils;
 
 import androidx.recyclerview.widget.GridLayoutManager;

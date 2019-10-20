@@ -36,6 +36,9 @@ public class MovieViewModel extends AndroidViewModel {
             case 2:
                 movieLiveData.loadData(2);
                 return;
+            case 3:
+                movieLiveData.loadDatabase();
+                return;
             default:
                 movieLiveData.loadData(1);
                 return;

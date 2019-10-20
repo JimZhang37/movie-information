@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class TestActivity extends AppCompatActivity implements ImageAdapter.List
             mAdapter = new ImageAdapter(getApplicationContext(), data.size(), data, TestActivity.this);
             mRV.setAdapter(mAdapter);
         });
+
     }
 
 
@@ -70,7 +72,7 @@ public class TestActivity extends AppCompatActivity implements ImageAdapter.List
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-
+        Log.d("menu item ID is ", String.valueOf(itemId));
         switch (itemId) {
             /*         * When you click the reset menu item, we want to start all over
              * and display the pretty gradient again. There are a few similar
@@ -81,6 +83,9 @@ public class TestActivity extends AppCompatActivity implements ImageAdapter.List
                 return true;
             case R.id.top_rated_test:
                 model.setData(2);
+                return true;
+            case R.id.favorite_test:
+                model.setData(3);
                 return true;
         }
         return super.onOptionsItemSelected(item);//TODO why return?

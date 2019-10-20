@@ -12,19 +12,21 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".TestActivity"
-            android:label="Test"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity
-            android:name=".DetailActivity"
-            android:label="Detail"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:label="Main">
+            android:label="Test">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".DetailActivity"
+            android:label="Detail"
+            android:parentActivityName=".TestActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="Main">
+
         </activity>
 
         <provider
